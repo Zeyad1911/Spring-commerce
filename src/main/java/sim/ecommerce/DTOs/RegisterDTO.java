@@ -12,6 +12,7 @@ public class RegisterDTO {
     @Email
     private String email;
     @NotBlank(message = "Username should not be blank")
+
     private String username;
     @NotBlank(message = "Password should not be blank")
     @Size(min = 8, message = "password should be more than 8 letters")

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 @Entity
 @Getter

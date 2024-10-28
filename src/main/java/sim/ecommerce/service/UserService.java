@@ -16,6 +16,7 @@ import sim.ecommerce.repository.UserRepository;
 import sim.ecommerce.utils.PasswordEncrypted;
 
 import java.awt.geom.RectangularShape;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -29,24 +30,25 @@ public class UserService implements UserDetailsService {
         this.encrypted = encrypted;
     }
 
-    public User save(RegisterDTO registerDTO) {
+    public void save(RegisterDTO registerDTO) {
         var coder = encrypted.passwordEncoderService();
+        Optional<User> userByEmail = userRepository.findUserByEmail(registerDTO.getEmail());
 
-            if (userRepository.findUserByEmail(registerDTO.getEmail()) == null) {
+            if (userByEmail.isEmpty()) {
                 User user = new User();
                 user.setUsername(registerDTO.getUsername());
                 user.setEmail(registerDTO.getEmail());
                 user.setHashed_password(coder.encode(registerDTO.getPassword()));
                 userRepository.save(user);
-                return user;
             }
             else {
-                throw new UserExistException("user already exist");
+                throw new UserExistException("Email is used by another account");
             }
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByEmail(username);
+        User user = userRepository.findUserByEmail(username)
+                .orElseThrow(()-> new UsernameNotFoundException("User not found") );
         return new UserInfo(user);
     }
 }
