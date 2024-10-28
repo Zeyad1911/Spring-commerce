@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
@@ -23,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,12 +33,13 @@ public class WebSecurityConfig {
                         requestMatcherRegistry.requestMatchers("/user/login").permitAll()
                                 .requestMatchers(HttpMethod.POST,"/user/register").permitAll()
                                 .anyRequest().authenticated()
+
         ).csrf(
                         (httpSecurityCsrfConfigurer ->
                                 httpSecurityCsrfConfigurer.ignoringRequestMatchers(
                                         "/user/register", "user/login")
                         )
-                )
+                ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
