@@ -5,9 +5,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import sim.ecommerce.service.JwtService;
+import sim.ecommerce.service.UserService;
 
 import java.io.IOException;
 
@@ -15,6 +19,7 @@ import java.io.IOException;
 @AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
+    private final UserService userService;
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -25,6 +30,20 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         String token = authHeader.substring(7);
-        jwtService.isValid(token);
+        if (jwtService.isValid(token)) {
+            String username = jwtService.extractUsername(token);
+            System.out.println(username);
+            UserDetails userDetails = userService.loadUserByUsername(username);
+            SecurityContextHolder.getContext().setAuthentication(
+                    new UsernamePasswordAuthenticationToken(userDetails,
+                            null,
+                            userDetails.getAuthorities())
+            );
+        }
+        else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid Jwt token");
+        }
+        doFilter(request, response, filterChain);
     }
 }
