@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.SignatureException;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.Arrays;
 import java.util.Date;
 @Service
 public class JwtService {
@@ -16,21 +17,20 @@ public class JwtService {
     private final static byte [] secret = SECRET.getBytes();
 
     private static final Key key = Keys.hmacShaKeyFor(secret);
-    private static final long expiration = 840000;
+    private static final long expiration = 24 * 60 * 60 * 1000;
 
 
-    public String generateToken(String username) {
-        System.out.println("secret key is " + SECRET);
+    public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS256,key)
+                .signWith(SignatureAlgorithm.HS256,SECRET.getBytes())
                 .compact();
     }
 
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(secret)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -38,18 +38,20 @@ public class JwtService {
 
     }
 
-    public Boolean isValid(String token) {
-        try {
-            var tokenValidating = Jwts
-                    .parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-            System.out.println("it is the following: "+tokenValidating);
-            return true;
-        } catch (SignatureException | ExpiredJwtException  | MalformedJwtException e) {
-            System.out.println(e.getMessage());
+        public Boolean isValid(String token) {
+            try {
+                Jwts.parserBuilder()
+                        .setSigningKey(SECRET.getBytes())
+                        .build()
+                        .parseClaimsJws(token);
+                return true;
+            } catch (ExpiredJwtException e) {
+                System.out.println("Token has expired");
+            } catch (SignatureException e) {
+                System.out.println("Signature validation failed");
+            } catch (MalformedJwtException e) {
+                System.out.println("Token is malformed");
+            }
+            return false;
         }
-        return false;
-    }
 }

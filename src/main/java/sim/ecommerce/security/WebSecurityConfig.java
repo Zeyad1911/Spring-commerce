@@ -37,7 +37,7 @@ public class WebSecurityConfig {
         ).csrf(
                         (httpSecurityCsrfConfigurer ->
                                 httpSecurityCsrfConfigurer.ignoringRequestMatchers(
-                                        "/user/register", "user/login")
+                                        "/user/register", "user/login", "product/createProduct")
                         )
                 ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

@@ -63,10 +63,9 @@ public class UserController {
                                                         = new UsernamePasswordAuthenticationToken
                     (login.getEmail(), login.getPassword());
             Authentication authentication = authenticationManager.authenticate(token);
-            System.out.println(token.getCredentials());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserInfo user = (UserInfo) authentication.getPrincipal();
-            String jwtToken = jwtService.generateToken(user.getUsername());
+            String jwtToken = jwtService.generateToken(user.getEmail());
             System.out.println(jwtToken);
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO("user has been logged in"
             , jwtToken);

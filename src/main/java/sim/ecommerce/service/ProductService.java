@@ -39,6 +39,7 @@ public class ProductService {
         p.setAvailable(true);
         p.setStockQuantity(product.getStockQuantity());
         p.setName(product.getName());
+        p.setPrice(product.getPrice());
         p.setImageUrl(product.getImageUrl());
         return p;
     }
