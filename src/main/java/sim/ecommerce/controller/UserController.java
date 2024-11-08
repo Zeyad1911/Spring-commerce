@@ -66,7 +66,6 @@ public class UserController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserInfo user = (UserInfo) authentication.getPrincipal();
             String jwtToken = jwtService.generateToken(user.getEmail());
-            System.out.println(jwtToken);
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO("user has been logged in"
             , jwtToken);
             return ResponseEntity.status(HttpStatus.OK).body(loginResponseDTO);

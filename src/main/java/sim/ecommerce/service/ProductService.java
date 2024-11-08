@@ -33,7 +33,7 @@ public class ProductService {
         }
     }
 
-    public Product productMapper(ProductDTO product) {
+    public Product productMapper(@org.jetbrains.annotations.NotNull ProductDTO product) {
         Product p = new Product();
         p.setDescription(product.getDescription());
         p.setAvailable(true);
@@ -54,13 +54,14 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public void updateProductQuantity(long productID, int quantity) {
+    public boolean updateProductQuantity(long productID, int quantity) {
             Product p = productRepository.findById(productID).orElseThrow(
                     () -> new RuntimeException("Product not available")
             );
             if (quantity >= 0) {
                 p.setStockQuantity(quantity);
                 productRepository.save(p);
+                return true;
             }
             else {
                 throw new IllegalArgumentException("quantity can not be less than zero");
@@ -102,7 +103,12 @@ public class ProductService {
                 () -> new RuntimeException("Product not found")
         );
 
-         productRepository.delete(p);
-         return "Product is deleted";
+         try {
+             productRepository.delete(p);
+             return "Product is deleted";
+         } catch (Exception e) {
+             throw new RuntimeException(e.getMessage());
+         }
+
     }
 }

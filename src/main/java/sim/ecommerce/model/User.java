@@ -20,4 +20,6 @@ public class User {
     private String hashed_password;
     @Column(unique = true)
     private String email;
+    private Role role;
+
 }

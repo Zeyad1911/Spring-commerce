@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import sim.ecommerce.DTOs.RegisterDTO;
 import sim.ecommerce.SecurityInfo.UserInfo;
 import sim.ecommerce.exceptions.UserExistException;
+import sim.ecommerce.model.Role;
 import sim.ecommerce.model.User;
 import sim.ecommerce.repository.UserRepository;
 import sim.ecommerce.utils.PasswordEncrypted;
@@ -39,6 +40,7 @@ public class UserService implements UserDetailsService {
                 user.setUsername(registerDTO.getUsername());
                 user.setEmail(registerDTO.getEmail());
                 user.setHashed_password(coder.encode(registerDTO.getPassword()));
+                user.setRole(Role.USER);
                 userRepository.save(user);
             }
             else {
