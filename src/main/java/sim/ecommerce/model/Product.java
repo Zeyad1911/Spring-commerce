@@ -21,4 +21,8 @@ public class Product {
     private int stockQuantity;
     private boolean isAvailable;
     private String imageUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 }
