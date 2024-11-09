@@ -21,5 +21,7 @@ public class User {
     @Column(unique = true)
     private String email;
     private Role role;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Cart cart;
 
 }

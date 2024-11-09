@@ -25,6 +25,12 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncrypted encrypted;
 
+    public User getUserById(long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("User can not be found")
+        );
+    }
+
     @Autowired
     UserService(UserRepository userRepository, PasswordEncrypted encrypted) {
         this.userRepository = userRepository;
