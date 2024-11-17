@@ -10,6 +10,7 @@ import sim.ecommerce.model.Product;
 import sim.ecommerce.service.ProductService;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -27,7 +28,6 @@ public class ProductController {
 
     @PostMapping("/createProduct")
     public ResponseEntity<String> createProduct(@RequestBody ProductDTO productDTO) {
-        System.out.println(productDTO.getPrice());
         try {
             productService.createProduct(productDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body("A product created");
@@ -35,7 +35,19 @@ public class ProductController {
             throw new RuntimeException("there is a problem while creating a product " + e.getMessage());
         }
     }
-    //todo public read;
+
+    @PostMapping("/listProducts")
+    public ResponseEntity<String> createProducts(@RequestBody List<ProductDTO> productDTOS) {
+            try {
+                for(ProductDTO product : productDTOS) {
+                    productService.createProduct(product);
+                }
+                return ResponseEntity.status(HttpStatus.CREATED).body("A list of products created");
+            } catch (SecurityException e) {
+                throw new RuntimeException("there is a problem while creating a product " + e.getMessage());
+            }
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable long id) {
             Product p = productService.getProduct(id);
