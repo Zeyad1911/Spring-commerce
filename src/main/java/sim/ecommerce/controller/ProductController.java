@@ -37,6 +37,7 @@ public class ProductController {
     }
 
     @PostMapping("/listProducts")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> createProducts(@RequestBody List<ProductDTO> productDTOS) {
             try {
                 for(ProductDTO product : productDTOS) {

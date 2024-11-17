@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import sim.ecommerce.DTOs.LoginDTO;
 import sim.ecommerce.DTOs.LoginResponseDTO;
 import sim.ecommerce.DTOs.RegisterDTO;
 import sim.ecommerce.SecurityInfo.UserInfo;
+import sim.ecommerce.model.Role;
 import sim.ecommerce.service.JwtService;
 import sim.ecommerce.service.UserService;
 
@@ -52,7 +54,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid RegisterDTO registerDTO) {
-        userService.save(registerDTO);
+        userService.save(registerDTO, Role.USER);
         return ResponseEntity.status(HttpStatus.CREATED).body("User successfully registered now");
     }
 

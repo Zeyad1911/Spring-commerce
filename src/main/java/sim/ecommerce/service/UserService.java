@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
         this.encrypted = encrypted;
     }
 
-    public void save(RegisterDTO registerDTO) {
+    public void save(RegisterDTO registerDTO,Role role) {
         var coder = encrypted.passwordEncoderService();
         Optional<User> userByEmail = userRepository.findUserByEmail(registerDTO.getEmail());
 
@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
                 user.setUsername(registerDTO.getUsername());
                 user.setEmail(registerDTO.getEmail());
                 user.setHashed_password(coder.encode(registerDTO.getPassword()));
-                user.setRole(Role.USER);
+                user.setRole(role);
                 userRepository.save(user);
             }
             else {

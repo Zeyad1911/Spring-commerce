@@ -2,6 +2,7 @@ package sim.ecommerce.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import sim.ecommerce.DTOs.ProductDTO;
 import sim.ecommerce.model.Product;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public Product createProduct(ProductDTO product) {
         if (product.getName() == null || product.getName().isEmpty()) {
             throw new IllegalArgumentException("product should have a name");
