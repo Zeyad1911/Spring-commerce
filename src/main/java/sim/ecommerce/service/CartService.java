@@ -12,6 +12,8 @@ import sim.ecommerce.model.Product;
 import sim.ecommerce.model.User;
 import sim.ecommerce.repository.CartRepository;
 import sim.ecommerce.repository.UserRepository;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,13 +93,11 @@ public class CartService {
         return cartMapper.CartMapperDTO(cart);
     }
 
-    public void calculateTotalPrice(long cart_id) {
+    public BigDecimal calculateTotalPrice(long cart_id) {
         Cart cart = getCartByID(cart_id);
         List<Product> cartItems =  cart.getItems();
         cart.updateTotalPrice();
-        System.out.println(cart.getTotalPrice());
-
-        //test to be deleted
-        System.out.println("cart items + "+cartItems);
+        return cart.getTotalPrice();
     }
+
 }

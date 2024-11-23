@@ -1,5 +1,6 @@
 package sim.ecommerce.service;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,10 +14,11 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class ProductService {
     private final ProductRepository productRepository;
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     public Product createProduct(ProductDTO product) {
         if (product.getName() == null || product.getName().isEmpty()) {
             throw new IllegalArgumentException("product should have a name");
@@ -35,7 +37,7 @@ public class ProductService {
         }
     }
 
-    public Product productMapper(@org.jetbrains.annotations.NotNull ProductDTO product) {
+    public Product productMapper(@NotNull ProductDTO product) {
         Product p = new Product();
         p.setDescription(product.getDescription());
         p.setAvailable(true);

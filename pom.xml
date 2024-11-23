@@ -74,6 +74,14 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.squareup/square -->
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>square</artifactId>
+            <version>41.2.0.20241017</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>com.mysql</groupId>
